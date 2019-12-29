@@ -99,7 +99,7 @@ public class ProjectVerticle extends AbstractVerticle {
                 for (Project project : projects) {
                     client.save("projects", JsonObject.mapFrom(project), res2 -> {
                         if (res2.succeeded()) {
-                            logger.info("Doc. saved: {}", res2.result());
+                            logger.info("Doc. saved: {}", project.getProjectId());
                         } else {
                             logger.error("Error", res2.cause());
                         }
@@ -233,16 +233,22 @@ public class ProjectVerticle extends AbstractVerticle {
         } else {
             JsonObject query = new JsonObject().put("projectId", project.getProjectId());
 
-            UpdateOptions options = new UpdateOptions().setMulti(true);
-            JsonObject update = new JsonObject().put("$set", JsonObject.mapFrom(project));
+            client.find("projects", query, res -> {
+                if (res.succeeded() && !res.result().isEmpty()) {
+                    UpdateOptions options = new UpdateOptions().setMulti(true);
+                    JsonObject update = new JsonObject().put("$set", JsonObject.mapFrom(project));
 
-            client.updateCollectionWithOptions("projects", query, update, options, res -> {
-                if (res.succeeded()) {
-                    context.response().setStatusCode(202).end();
+                    client.updateCollectionWithOptions("projects", query, update, options, res2 -> {
+                        if (res2.succeeded()) {
+                            context.response().setStatusCode(202).end();
+                        } else {
+                            logger.error("Error", res2.cause());
+                            context.response().putHeader("content-type", "application/json; charset=utf-8")
+                                    .setStatusCode(500).end();
+                        }
+                    });
                 } else {
-                    logger.error("Error", res.cause());
-                    context.response().putHeader("content-type", "application/json; charset=utf-8").setStatusCode(500)
-                            .end();
+                    context.response().setStatusCode(404).end();
                 }
             });
         }
@@ -253,15 +259,21 @@ public class ProjectVerticle extends AbstractVerticle {
         if (id == null) {
             context.response().setStatusCode(400).end();
         } else {
-            JsonObject query = new JsonObject().put("projectId", id);
+            JsonObject query = new JsonObject().put("projectId", Integer.parseInt(id));
 
-            client.removeDocuments("projects", query, res -> {
-                if (res.succeeded()) {
-                    context.response().setStatusCode(202).end();
+            client.find("projects", query, res -> {
+                if (res.succeeded() && !res.result().isEmpty()) {
+                    client.removeDocuments("projects", query, res2 -> {
+                        if (res2.succeeded()) {
+                            context.response().setStatusCode(202).end();
+                        } else {
+                            logger.error("Error", res2.cause());
+                            context.response().putHeader("content-type", "application/json; charset=utf-8")
+                                    .setStatusCode(500).end();
+                        }
+                    });
                 } else {
-                    logger.error("Error", res.cause());
-                    context.response().putHeader("content-type", "application/json; charset=utf-8").setStatusCode(500)
-                            .end();
+                    context.response().setStatusCode(404).end();
                 }
             });
         }
