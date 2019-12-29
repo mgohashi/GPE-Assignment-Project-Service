@@ -99,7 +99,7 @@ public class ProjectVerticle extends AbstractVerticle {
                 for (Project project : projects) {
                     client.save("projects", JsonObject.mapFrom(project), res2 -> {
                         if (res2.succeeded()) {
-                            logger.info("Doc. saved: {}", project.getProjectId());
+                            logger.info("Doc. saved: {0}", project.getProjectId());
                         } else {
                             logger.error("Error", res2.cause());
                         }
@@ -188,7 +188,7 @@ public class ProjectVerticle extends AbstractVerticle {
                         }
                     });
                 } else {
-                    logger.error("Project with the same ID already exists!");
+                    logger.info("Project with the same ID {0} already exists!", project.getProjectId());
                     context.response().setStatusCode(400).end();
                 }
             });
@@ -248,6 +248,7 @@ public class ProjectVerticle extends AbstractVerticle {
                         }
                     });
                 } else {
+                    logger.info("Project with the ID {0} does not exist!", project.getProjectId());
                     context.response().setStatusCode(404).end();
                 }
             });
@@ -273,6 +274,7 @@ public class ProjectVerticle extends AbstractVerticle {
                         }
                     });
                 } else {
+                    logger.info("Project with the ID {0} does not exist!", id);
                     context.response().setStatusCode(404).end();
                 }
             });
