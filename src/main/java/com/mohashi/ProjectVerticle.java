@@ -28,8 +28,8 @@ public class ProjectVerticle extends AbstractVerticle {
 
     @Override
     public void start(Promise<Void> promise) throws Exception {
-        JsonObject config = new JsonObject().put("host", System.getenv("MONGODB_SERVICE_HOST"))
-                .put("port", Integer.valueOf(System.getenv("MONGODB_SERVICE_PORT"))).put("db_name", "db")
+        JsonObject config = new JsonObject().put("host", System.getenv("PROJECT_MONGODB_SERVICE_HOST"))
+                .put("port", Integer.valueOf(System.getenv("PROJECT_MONGODB_SERVICE_PORT"))).put("db_name", "db")
                 .put("username", "mongo").put("password", "mongo");
 
         client = MongoClient.createShared(vertx, config);
