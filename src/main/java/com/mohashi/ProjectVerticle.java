@@ -52,13 +52,13 @@ public class ProjectVerticle extends AbstractVerticle {
 
         router.route("/assets/*").handler(StaticHandler.create("assets"));
 
-        router.route("/api/projects*").handler(BodyHandler.create());
-        router.get("/api/projects").handler(this::getAll);
-        router.get("/api/projects/status/:status").handler(this::getByStatus);
-        router.post("/api/projects").handler(this::add);
-        router.get("/api/projects/:id").handler(this::get);
-        router.put("/api/projects/:id").handler(this::update);
-        router.delete("/api/projects/:id").handler(this::delete);
+        router.route("/projects*").handler(BodyHandler.create());
+        router.get("/projects").handler(this::getAll);
+        router.get("/projects/status/:status").handler(this::getByStatus);
+        router.post("/projects").handler(this::add);
+        router.get("/projects/:id").handler(this::get);
+        router.put("/projects/:id").handler(this::update);
+        router.delete("/projects/:id").handler(this::delete);
 
         // Create the HTTP server and pass the "accept" method to the request handler.
         vertx.createHttpServer().requestHandler(router).listen(

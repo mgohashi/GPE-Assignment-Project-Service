@@ -1,1 +1,1 @@
-http DELETE project-service-assignment-cld-ntv.apps.na311.openshift.opentlc.com/api/projects/6
+http DELETE $(oc get route/project-service -o jsonpath='{.spec.host}')/projects/6

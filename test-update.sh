@@ -6,4 +6,4 @@ echo '{
     "projectId": 6,
     "projectStatus": "OPEN",
     "projectTitle": "RHEV-2 Implementation"
-}' |  http -v PUT project-service-assignment-cld-ntv.apps.na311.openshift.opentlc.com/api/projects/6
+}' |  http -v PUT $(oc get route/project-service -o jsonpath='{.spec.host}')/projects/6
