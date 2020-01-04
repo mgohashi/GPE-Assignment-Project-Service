@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.mohashi</groupId>
@@ -19,6 +19,8 @@
 
     <vertx.version>3.8.3.redhat-00001</vertx.version>
     <vertx-maven-plugin.version>1.0.22</vertx-maven-plugin.version>
+    <mockito.version>3.2.4</mockito.version>
+    <powermock.version>2.0.4</powermock.version>
 
     <vertx.verticle>com.mohashi.ProjectVerticle</vertx.verticle>
 
@@ -31,6 +33,11 @@
       <id>redhat-ga</id>
       <name>Red Hat GA Repository</name>
       <url>https://maven.repository.redhat.com/ga/</url>
+    </repository>
+    <repository>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo1.maven.org/maven2/</url>
     </repository>
   </repositories>
 
@@ -65,35 +72,74 @@
     </dependency>
     <dependency>
       <groupId>io.vertx</groupId>
+      <artifactId>vertx-web-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
       <artifactId>vertx-mongo-client</artifactId>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.11</version>
+      <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-unit</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito2</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4-rule-agent</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>1.56.0.redhat-2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
-        <plugin>
-            <groupId>io.reactiverse</groupId>
-            <artifactId>vertx-maven-plugin</artifactId>
-            <version>${vertx-maven-plugin.version}</version>
-            <executions>
-                <execution>
-                    <id>vmp</id>
-                    <goals>
-                        <goal>initialize</goal>
-                        <goal>package</goal>
-                    </goals>
-                </execution>
-            </executions>
-            <configuration>
-                <redeploy>true</redeploy>
-            </configuration>
-        </plugin>
+      <plugin>
+        <groupId>io.reactiverse</groupId>
+        <artifactId>vertx-maven-plugin</artifactId>
+        <version>${vertx-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>vmp</id>
+            <goals>
+              <goal>initialize</goal>
+              <goal>package</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <redeploy>true</redeploy>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 

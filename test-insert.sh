@@ -1,3 +1,5 @@
+#!/bin/sh
+
 echo '{
     "ownerEmail": "dsilva@gmail.com",
     "ownerFirstName": "Duff",

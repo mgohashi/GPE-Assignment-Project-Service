@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.mohashi.model.Project;
 import com.mohashi.model.ProjectStatus;
+import com.mohashi.mongo.MongoClient;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Promise;
@@ -14,7 +15,6 @@ import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.ext.mongo.MongoClient;
 import io.vertx.ext.mongo.UpdateOptions;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -28,8 +28,8 @@ public class ProjectVerticle extends AbstractVerticle {
 
     @Override
     public void start(Promise<Void> promise) throws Exception {
-        JsonObject config = new JsonObject().put("host", System.getenv("PROJECT_MONGODB_SERVICE_HOST"))
-                .put("port", Integer.valueOf(System.getenv("PROJECT_MONGODB_SERVICE_PORT"))).put("db_name", "db")
+        JsonObject config = new JsonObject().put("host", getEnv("PROJECT_MONGODB_SERVICE_HOST", ""))
+                .put("port", Integer.valueOf(getEnv("PROJECT_MONGODB_SERVICE_PORT", "0"))).put("db_name", "db")
                 .put("username", "mongo").put("password", "mongo");
 
         client = MongoClient.createShared(vertx, config);
@@ -73,10 +73,18 @@ public class ProjectVerticle extends AbstractVerticle {
                 });
     }
 
+    private String getEnv(String env, String defaultValue) {
+        if (System.getenv(env) == null) {
+            return defaultValue;
+        } else {
+            return System.getenv(env);
+        }
+    }
+
     private void createProjects() {
         client.dropCollection("projects", res -> {
             if (res.succeeded()) {
-                logger.info("Collection droped: {}", res.result());
+                logger.info("Collection droped.");
             } else {
                 logger.error("Error", res.cause());
             }
